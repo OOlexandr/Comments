@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Comments</title>
+</head>
+
+<form method="POST" action="{% url 'comments_app:comment' %}">
+    {% csrf_token %}
+        <label>Username:
+            {{form.username}}
+        </label>
+        <label>Email:
+            {{form.email}}
+        </label>
+        <label>Comment:
+            {{form.text}}
+        </label>
+    </div>
+    <div class="grid">
+        <button type="submit">Submit</button>
+        <button type="reset" class="secondary">Reset</button>
+    </div>
+</form>

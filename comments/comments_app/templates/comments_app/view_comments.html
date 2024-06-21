@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .comment {
+            background-color: white;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .reply {
+            margin-left: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Comments</h1>
+    <div id="comments">
+        {% for comment in comments %}
+            <div class="comment">
+                <p><strong>{{ comment.username }}</strong> - {{ comment.created_at }}</p>
+                <p>{{ comment.text }}</p>
+                <a href="#" onclick="showReplyForm( comment.id );">Reply</a>
+                <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
+                    <form method="post" action="{% url 'comments_app:add_comment' %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="hidden" name="parent" value="{{ comment.id }}">
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+                {% for reply in comment.replies.all %}
+                    <div class="comment reply">
+                        <p><strong>{{ reply.username }}</strong> - {{ reply.created_at }}</p>
+                        <p>{{ reply.text }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <h2>Add a Comment</h2>
+    <form method="post" action="{% url 'comments_app:add_comment' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        function showReplyForm(commentId) {
+            var replyForm = document.getElementById('reply-form-' + commentId);
+            if (replyForm.style.display === 'none') {
+                replyForm.style.display = 'block';
+            } else {
+                replyForm.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from django.forms import ModelForm, CharField, TextInput
+from django.forms import ModelForm, CharField, TextInput, HiddenInput
 from .models import Comment
 
 
@@ -10,4 +10,7 @@ class CommentForm(ModelForm):
     
     class Meta:
         model = Comment
-        fields = ['username', 'email', 'text']
+        fields = ['username', 'email', 'text', 'parent']
+        widgets = {
+            'parent': HiddenInput()
+        }

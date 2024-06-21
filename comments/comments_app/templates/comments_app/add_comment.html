@@ -4,7 +4,7 @@
     <title>Comments</title>
 </head>
 
-<form method="POST" action="{% url 'comments_app:comment' %}">
+<form method="POST" action="{% url 'comments_app:add_comment' %}">
     {% csrf_token %}
         <label>Username:
             {{form.username}}

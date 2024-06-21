@@ -14,6 +14,8 @@ def add_comment(request):
             form.save()
             return redirect(to='comments_app:view_comments')
         else:
-            return render(request, 'comments_app/add_comment.html', {'form': form})
+            comments = Comment.objects.filter(parent__isnull=True)
+            return render(request, 'comments_app/view_comment.html', {'comments': comments, 'form': form})
 
-    return render(request, 'comments_app/add_comment.html', {'form': CommentForm()})
+    comments = Comment.objects.filter(parent__isnull=True)
+    return render(request, 'comments_app/view_comment.html', {'comments': comments, 'form': CommentForm()})

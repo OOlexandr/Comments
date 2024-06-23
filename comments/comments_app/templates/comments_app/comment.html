@@ -1,0 +1,21 @@
+<div class="comment">
+    <p><strong>{{ comment.username }}</strong> - {{ comment.created }}</p>
+    <p>{{ comment.text }}</p>
+    <a href="#" onclick="showReplies( '{{comment.id}}' );">See replies</a>
+    <div id="replies-{{ comment.id }}" class="replies" style="display:none;">
+        {% for reply in comment.replies.all %}
+            <div class="reply">
+                {% include "comments_app/comment.html" with comment=reply %}
+            </div>
+        {% endfor %}
+    </div>
+    <a href="#" onclick="showReplyForm('{{ comment.id }}');">Reply</a>
+    <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
+        <form method="post" action="{% url 'comments_app:add_comment' %}">
+            {% csrf_token %}    
+            {{ form.as_p }}
+            <input type="hidden" name="parent" value="{{ comment.id }}">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>

@@ -27,6 +27,20 @@
 </head>
 <body>
     <h1>Comments</h1>
+    <form action="" method="get">
+        <label>Sort comments by: </label>
+        <select id="order_by" name="order_by">
+            <option value="">--Choose an option--</option>
+            <option value="username">Username</option>
+            <option value="email">Email</option>
+        </select>
+        <label>Order: </label>
+        <select id="order" name="order">
+            <option value="">Ascending</option>
+            <option value="-">Descending</option>
+        </select>
+        <input type="submit" value="OK">
+    </form>
     <div id="comments">
         {% for comment in comments %}
             {% include "comments_app/comment.html" with comment=comment %}
@@ -41,7 +55,6 @@
             <button type="submit">Submit</button>
         </form>
     </div>
-
     <script>
         function showReplyForm(commentId) {
             const replyForm = document.getElementById('reply-form-' + commentId);

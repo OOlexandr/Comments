@@ -3,7 +3,13 @@ from comments_app.forms import CommentForm
 from comments_app.models import Comment
 
 def view_comment(request):
-    comments = Comment.objects.filter(parent__isnull=True)
+    print(request.GET)
+    order_by = request.GET.get("order_by")
+    page = request.GET.get("page") if request.GET.get("page") else 0
+    if order_by:
+        comments = Comment.objects.filter(parent__isnull=True).order_by(request.GET.get("order") + order_by)[page*25:(page+1)*25]
+    else:
+        comments = Comment.objects.filter(parent__isnull=True).order_by('-created')[page*25:(page+1)*25]
     form = CommentForm()
     return render(request, 'comments_app/view_comments.html', {'comments': comments, 'form': form})
 

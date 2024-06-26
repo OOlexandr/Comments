@@ -14,6 +14,10 @@
         <form method="post" action="{% url 'comments_app:add_comment' %}">
             {% csrf_token %}    
             {{ form.as_p }}
+            <div onload="generate( '{{ comment.id }}' )" id="captcha-{{ comment.id }}" selectable="False"></div>
+            <input type="text" name="captcha">
+            <input id="captcha-answer-{{ comment.id }}" type="hidden" name="captcha_answer">
+            <button type="button" onclick="generate('{{ comment.id }}')">Regenerate captcha</button>
             <input type="hidden" name="parent" value="{{ comment.id }}">
             <button type="submit">Submit</button>
         </form>

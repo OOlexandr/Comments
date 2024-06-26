@@ -55,10 +55,14 @@
         <form method="post" action="{% url 'comments_app:add_comment' %}">
             {% csrf_token %}
             {{ form.as_p }}
-            <input name="comment" value="True">
+            <div onload="generate()" id="captcha-0" selectable="False"></div>
+            <input type="text" name="captcha">
+            <input id="captcha-answer-0" type="hidden" name="captcha_answer">
+            <button type="button" onclick="generate()">Regenerate captcha</button>
             <button type="submit">Submit</button>
         </form>
     </div>
+
     {% if page > 0 %}
         <form action="" method="get">
             <input type="hidden" name="order_by" value="{{ order_by }}">
@@ -75,6 +79,7 @@
             <input type="submit" value="Next page">
         </form>
     {% endif %}
+
     <script>
         function changeVisibility(block) {
             if (block.style.display === 'none') {
@@ -86,10 +91,12 @@
         function showReplyForm(commentId) {
             const replyForm = document.getElementById('reply-form-' + commentId);
             changeVisibility(replyForm)
+            generate(commentId)
         }
         function showCommentForm() {
             const commentForm = document.getElementById('comment-form');
             changeVisibility(commentForm)
+            generate()
         }
         function showReplies(commentId) {
             const replies = document.getElementById('replies-' + commentId);
@@ -98,6 +105,22 @@
         function showSorting() {
             const sorting = document.getElementById('sorting');
             changeVisibility(sorting)
+        }
+
+        function generate(captchaId=0) {
+            let uniquechar = "";
+
+            const randomchar =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+            for (let i = 1; i < 5; i++) {
+                uniquechar += randomchar.charAt(
+                Math.random() * randomchar.length)
+            }
+            const captcha = document.getElementById('captcha-' + captchaId);
+            captcha.innerHTML = uniquechar;
+            const captcha_answer = document.getElementById('captcha-answer-' + captchaId);
+            captcha_answer.value = uniquechar;
         }
     </script>
 </body>

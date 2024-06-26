@@ -19,7 +19,7 @@ def view_comment(request):
 def add_comment(request):
     if request.method == 'POST':
         form = CommentForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() and request.POST.get("captcha") == request.POST.get("captcha_answer"):
             form.save()
 
     return redirect(to='comments_app:view_comments')

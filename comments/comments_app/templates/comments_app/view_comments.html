@@ -76,37 +76,28 @@
         </form>
     {% endif %}
     <script>
+        function changeVisibility(block) {
+            if (block.style.display === 'none') {
+                block.style.display = 'block';
+            } else {
+                block.style.display = 'none';
+            }
+        }
         function showReplyForm(commentId) {
             const replyForm = document.getElementById('reply-form-' + commentId);
-            if (replyForm.style.display === 'none') {
-                replyForm.style.display = 'block';
-            } else {
-                replyForm.style.display = 'none';
-            }
+            changeVisibility(replyForm)
         }
         function showCommentForm() {
             const commentForm = document.getElementById('comment-form');
-            if (commentForm.style.display === 'none') {
-                commentForm.style.display = 'block';
-            } else {
-                commentForm.style.display = 'none';
-            }
+            changeVisibility(commentForm)
         }
         function showReplies(commentId) {
             const replies = document.getElementById('replies-' + commentId);
-            if (replies.style.display === 'none') {
-                replies.style.display = 'block';
-            } else {
-                replies.style.display = 'none';
-            }
+            changeVisibility(replies)
         }
         function showSorting() {
             const sorting = document.getElementById('sorting');
-            if (sorting.style.display === 'none') {
-                sorting.style.display = 'block';
-            } else {
-                sorting.style.display = 'none';
-            }
+            changeVisibility(sorting)
         }
     </script>
 </body>

@@ -27,20 +27,23 @@
 </head>
 <body>
     <h1>Comments</h1>
-    <form action="" method="get">
-        <label>Sort comments by: </label>
-        <select id="order_by" name="order_by">
-            <option value="">--Choose an option--</option>
-            <option value="username">Username</option>
-            <option value="email">Email</option>
-        </select>
-        <label>Order: </label>
-        <select id="order" name="order">
-            <option value="">Ascending</option>
-            <option value="-">Descending</option>
-        </select>
-        <input type="submit" value="OK">
-    </form>
+    <a href="#" onclick="showSorting();">Sort comments</a>
+    <div id="sorting" class="sorting" style="display:none;">
+        <form action="" method="get">
+            <label>Sort comments by: </label>
+            <select id="order_by" name="order_by">
+                <option value="created">Date</option>
+                <option value="username">Username</option>
+                <option value="email">Email</option>
+            </select>
+            <label>Order: </label>
+            <select id="order" name="order">
+                <option value="">Ascending</option>
+                <option value="-">Descending</option>
+            </select>
+            <input type="submit" value="OK">
+        </form>
+    </div>
     <div id="comments">
         {% for comment in comments %}
             {% include "comments_app/comment.html" with comment=comment %}
@@ -96,26 +99,15 @@
             } else {
                 replies.style.display = 'none';
             }
-            
+        }
+        function showSorting() {
+            const sorting = document.getElementById('sorting');
+            if (sorting.style.display === 'none') {
+                sorting.style.display = 'block';
+            } else {
+                sorting.style.display = 'none';
+            }
         }
     </script>
 </body>
 </html>
-<!-- 
-{% for reply in comment.replies.all %}
-                        <div class="comment reply">
-                            <p><strong>{{ reply.username }}</strong> - {{ reply.created }}</p>
-                            <p>{{ reply.text }}</p>
-                            <a href="#" onclick="showReplyForm( '{{comment.id}}' );">Reply</a>
-                <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
-                    <form method="post" action="{% url 'comments_app:add_comment' %}">
-                        {% csrf_token %}
-                        {{ form.as_p }}
-                        <input type="hidden" name="parent" value="{{ comment.id }}">
-                        <button type="submit">Submit</button>
-                    </form>
-                </div>
-                <a href="#" onclick="showReplies( '{{comment.id}}' );">See replies</a>
-                <div id="replies-{{ comment.id }}" class="replies"></div>
-                        </div>
-                    {% endfor %} -->

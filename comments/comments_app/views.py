@@ -5,7 +5,7 @@ from comments_app.forms import CommentForm
 from comments_app.models import Comment
 from math import ceil
 
-PAGE_SIZE = 2
+PAGE_SIZE = 25
 
 def view_comment(request):
     order_by = request.GET.get("order_by") if request.GET.get("order_by") else "created"

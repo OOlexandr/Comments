@@ -3,23 +3,23 @@
     <p>{{ comment.text }}</p>
     <a href="#" onclick="showReplies( '{{comment.id}}' );">See replies</a>
     <div id="replies-{{ comment.id }}" class="replies" style="display:none;">
+        <a href="#" onclick="showReplyForm('{{ comment.id }}');">Reply</a>
+        <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
+            <form method="post" onsubmit="event.preventDefault(); submitReplyForm(this);">
+                {% csrf_token %}    
+                {{ form.as_p }}
+                <div onload="generate( '{{ comment.id }}' )" id="captcha-{{ comment.id }}" selectable="False"></div>
+                <input type="text" name="captcha">
+                <input id="captcha-answer-{{ comment.id }}" type="hidden" name="captcha_answer">
+                <button type="button" onclick="generate('{{ comment.id }}')">Regenerate captcha</button>
+                <input type="hidden" name="parent" value="{{ comment.id }}">
+                <button type="submit">Submit</button>
+            </form>
+        </div>
         {% for reply in comment.replies.all %}
             <div class="reply">
                 {% include "comments_app/comment.html" with comment=reply %}
             </div>
         {% endfor %}
-    </div>
-    <a href="#" onclick="showReplyForm('{{ comment.id }}');">Reply</a>
-    <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
-        <form method="post" action="{% url 'comments_app:add_comment' %}">
-            {% csrf_token %}    
-            {{ form.as_p }}
-            <div onload="generate( '{{ comment.id }}' )" id="captcha-{{ comment.id }}" selectable="False"></div>
-            <input type="text" name="captcha">
-            <input id="captcha-answer-{{ comment.id }}" type="hidden" name="captcha_answer">
-            <button type="button" onclick="generate('{{ comment.id }}')">Regenerate captcha</button>
-            <input type="hidden" name="parent" value="{{ comment.id }}">
-            <button type="submit">Submit</button>
-        </form>
     </div>
 </div>

@@ -122,6 +122,25 @@
             const captcha_answer = document.getElementById('captcha-answer-' + captchaId);
             captcha_answer.value = uniquechar;
         }
+
+        function submitReplyForm(form){
+            const reply = new FormData(form);
+            var request = new XMLHttpRequest();
+            request.open('POST', '{% url "comments_app:add_comment" %}', true)
+            request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            request.onload = function() {
+                if (request.status === 200) {
+                    var response = JSON.parse(request.responseText);
+                    var newReply = document.createElement('div');
+                    newReply.className = "reply"
+                    newReply.innerHTML = response.comment_html;
+                    form.closest('.replies').appendChild(newReply);
+                    form.reset();
+                    form.style.display = 'none';
+                }
+            };
+            request.send(reply);
+        }
     </script>
 </body>
 </html>

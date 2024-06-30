@@ -1,15 +1,28 @@
 <div class="comment">
     <p><strong>{{ comment.username }}</strong> - {{ comment.created }}</p>
-    <p>{{ comment.text }}</p>
+    <p id="comment-text-{{comment.id}}">{{ comment.text }}</p>
+    <a href="#" onclick="showEditForm( '{{comment.id}}' );">Edit</a>
+    <div id="edit-form-{{comment.id}}" class="edit-form" style="display:none;">
+        <form method="post" onsubmit="event.preventDefault(); submitEditForm(this);">
+            {% csrf_token %}
+            <input type="hidden" name="id" value="{{comment.id}}">
+            <input type="text" name="new_text" value="{{comment.text}}">
+            <div onload="generate( 'edit-{{ comment.id }}' )" id="captcha-edit-{{ comment.id }}" selectable="False"></div>
+            <input type="text" name="captcha" value="Enter symbols above">
+            <input id="captcha-answer-edit-{{ comment.id }}" type="hidden" name="captcha_answer">
+            <button type="button" onclick="generate('edit-{{ comment.id }}')">Regenerate captcha</button>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
     <a href="#" onclick="showReplies( '{{comment.id}}' );">See replies</a>
     <div id="replies-{{ comment.id }}" class="replies" style="display:none;">
         <a href="#" onclick="showReplyForm('{{ comment.id }}');">Reply</a>
         <div id="reply-form-{{ comment.id }}" class="reply-form" style="display:none;">
             <form method="post" onsubmit="event.preventDefault(); submitReplyForm(this);">
-                {% csrf_token %}    
+                {% csrf_token %}
                 {{ form.as_p }}
                 <div onload="generate( '{{ comment.id }}' )" id="captcha-{{ comment.id }}" selectable="False"></div>
-                <input type="text" name="captcha">
+                <input type="text" name="captcha" value="Enter symbols above">
                 <input id="captcha-answer-{{ comment.id }}" type="hidden" name="captcha_answer">
                 <button type="button" onclick="generate('{{ comment.id }}')">Regenerate captcha</button>
                 <input type="hidden" name="parent" value="{{ comment.id }}">

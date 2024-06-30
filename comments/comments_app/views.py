@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from comments_app.forms import CommentForm
 from comments_app.models import Comment
 from math import ceil
@@ -22,9 +22,25 @@ def add_comment(request):
         form = CommentForm(request.POST)
         if form.is_valid() and request.POST.get("captcha") == request.POST.get("captcha_answer") and request.POST.get("captcha"):
             comment = form.save()
+    return redirect(to='comments_app:view_comments')
+
+def add_reply(request):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid() and request.POST.get("captcha") == request.POST.get("captcha_answer") and request.POST.get("captcha"):
+            comment = form.save()
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 comment_html = render_to_string('comments_app/comment.html', {'comment': comment}, request=request)
                 return JsonResponse({'comment_html': comment_html})
+    return HttpResponseBadRequest
 
-    print("not here")
-    return redirect(to='comments_app:view_comments')
+def edit_comment(request):
+    if request.method == 'POST':
+        form = request.POST
+        if len(form.get("new_text")) <= 500 and request.POST.get("captcha") == request.POST.get("captcha_answer") and request.POST.get("captcha"):
+            comment = Comment.objects.get(id=int(form.get("id")))
+            comment.text = form.get("new_text")
+            comment.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'new_text': form.get('new_text')})
+    return HttpResponseBadRequest()
